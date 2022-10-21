@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "botServices_bot_wmg_bot_name": {
+            "defaultValue": "bot-wmg-bot",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.BotService/botServices",
+            "apiVersion": "2022-06-15-preview",
+            "name": "[parameters('botServices_bot_wmg_bot_name')]",
+            "location": "global",
+            "sku": {
+                "name": "S1"
+            },
+            "kind": "sdk",
+            "properties": {
+                "displayName": "[parameters('botServices_bot_wmg_bot_name')]",
+                "iconUrl": "https://docs.botframework.com/static/devportal/client/images/bot-framework-default.png",
+                "endpoint": "[concat('https://', parameters('botServices_bot_wmg_bot_name'), '-b078.azurewebsites.net/api/messages')]",
+                "msaAppId": "486c7269-a179-4bf9-861e-fc3aad573d55",
+                "luisAppIds": [],
+                "isStreamingSupported": false,
+                "schemaTransformationVersion": "1.3",
+                "tenantId": "b1051c4b-3b94-41ab-9441-e73a72342fdd",
+                "isCmekEnabled": false,
+                "disableLocalAuth": false
+            }
+        },
+        {
+            "type": "Microsoft.BotService/botServices/channels",
+            "apiVersion": "2022-06-15-preview",
+            "name": "[concat(parameters('botServices_bot_wmg_bot_name'), '/WebChatChannel')]",
+            "location": "global",
+            "dependsOn": [
+                "[resourceId('Microsoft.BotService/botServices', parameters('botServices_bot_wmg_bot_name'))]"
+            ],
+            "properties": {
+                "properties": {
+                    "sites": [
+                        {
+                            "siteName": "Default Site",
+                            "isEnabled": true,
+                            "isWebchatPreviewEnabled": true,
+                            "isBlockUserUploadEnabled": false
+                        }
+                    ]
+                },
+                "etag": "W/\"2af3a63ba1e9c6f019eec24c54ce54a221/10/2022 18:46:14\"",
+                "channelName": "WebChatChannel",
+                "location": "global"
+            }
+        }
+    ]
+}
